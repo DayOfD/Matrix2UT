@@ -101,16 +101,16 @@ body
 
         Appender!(string[]) tempArgs;
 
-        foreach(inIndex; tempInIndices)
+        foreach(tempInIndex; tempInIndices)
         {
-            tempArgs.put(header[inIndex]);
+            tempArgs.put(line[tempInIndex]);
         }
 
         Appender!(string[]) funcArgs;
 
         foreach(inIndex; inIndices)
         {
-            funcArgs.put(header[inIndex]);
+            funcArgs.put(line[inIndex]);
         }
 
         if (tempArgs.data.length)
@@ -134,9 +134,9 @@ body
             utLines.put("results.put(utAssert(`" ~ exps[outExpIndex] ~ "`," ~ exps[outExpIndex] ~ "," ~ line[outExpIndex] ~ "));");
         }
 
-        utLines.put("reports[" ~ lineIndexStr ~ "][$-1]=results.join(\"\\n\");");
+        utLines.put("reports[" ~ lineIndexStr ~ "][$-1]=results.data.join(\"\\n\");");
 
-        utLines.put("if(reports[" ~ lineIndexStr ~ "][$-1].empty)reports[ ~ lineIndexStr ~ ][$-1]=\"OK\";");
+        utLines.put("if(reports[" ~ lineIndexStr ~ "][$-1].empty)reports[" ~ lineIndexStr ~ "][$-1]=\"OK\";");
 
         utLines.put("results.shrinkTo(0);");
     }
@@ -147,13 +147,23 @@ body
 unittest
 {
     assert(generateUnittest([["func_name", "in", "return", "result"],
-                             ["hoge",      "0",  "0",      ""]])
+                             ["",          "",   "",       ""],
+                             ["hoge",      "1",  "2",      ""],
+                             ["piyo",      "3",  "4",      ""]])
+
                             ==
+
                             "import std.array;"
                             "Appender!(string[]) results;"
-                            "results.put(utAssert(`hoge`,hoge(0),0));"
-                            "reports[0][$-1]=resutls.join(\"\\n\");"
+
+                            "results.put(utAssert(`hoge`,hoge(1),2));"
+                            "reports[0][$-1]=results.data.join(\"\\n\");"
                             "if(reports[0][$-1].empty)reports[0][$-1]=\"OK\";"
+                            "results.shrinkTo(0);"
+
+                            "results.put(utAssert(`piyo`,piyo(3),4));"
+                            "reports[1][$-1]=results.data.join(\"\\n\");"
+                            "if(reports[1][$-1].empty)reports[1][$-1]=\"OK\";"
                             "results.shrinkTo(0);");
 }
 
