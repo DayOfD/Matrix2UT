@@ -91,7 +91,7 @@ body
     foreach (lineIndex, line; matrix[2..$])
     {
         string funcName = line[0];
-        string lineIndexStr = lineIndex.to!string();
+        string lineIndexStr = (lineIndex + 2).to!string();
 
         foreach(inExpIndex; inExpIndices)
         {
@@ -156,13 +156,13 @@ pure @safe unittest
                             "Appender!(string[]) results;"
 
                             "results.put(utAssert(`hoge`,hoge(1),2));"
-                            "reports[0][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
-                            "if(reports[0][$-1].empty)reports[0][$-1]=\"OK\";"
+                            "reports[2][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
+                            "if(reports[2][$-1].empty)reports[2][$-1]=\"OK\";"
                             "results.shrinkTo(0);"
 
                             "results.put(utAssert(`piyo`,piyo(3),4));"
-                            "reports[1][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
-                            "if(reports[1][$-1].empty)reports[1][$-1]=\"OK\";"
+                            "reports[3][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
+                            "if(reports[3][$-1].empty)reports[3][$-1]=\"OK\";"
                             "results.shrinkTo(0);");
 
     assert(generateUnittest([["func_name", "temp_in", "temp_in", "in", "in", "return", "result"],
@@ -176,13 +176,13 @@ pure @safe unittest
                             "Appender!(string[]) results;"
 
                             "results.put(utAssert(`hoge`,hoge!(int,long)(1,2),3));"
-                            "reports[0][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
-                            "if(reports[0][$-1].empty)reports[0][$-1]=\"OK\";"
+                            "reports[2][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
+                            "if(reports[2][$-1].empty)reports[2][$-1]=\"OK\";"
                             "results.shrinkTo(0);"
 
                             "results.put(utAssert(`piyo`,piyo!(string,int[])(4,5),6));"
-                            "reports[1][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
-                            "if(reports[1][$-1].empty)reports[1][$-1]=\"OK\";"
+                            "reports[3][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
+                            "if(reports[3][$-1].empty)reports[3][$-1]=\"OK\";"
                             "results.shrinkTo(0);");
 
 
