@@ -143,7 +143,7 @@ body
     return utLines.data.join();
 }
 
-unittest
+pure @safe unittest
 {
     assert(generateUnittest([["func_name", "in", "return", "result"],
                              ["",          "",   "",       ""],
@@ -215,7 +215,7 @@ unittest
 /*******************************************************************************
  * Write csv from strings of 2D array.
  */
-string toCsvData(string[][] strarys)
+string toCsvData(in string[][] strarys) pure
 {
 	import std.array, std.algorithm, std.conv;
 	auto app = appender!(string[][])();
@@ -232,7 +232,7 @@ string toCsvData(string[][] strarys)
 	return app.data.map!`a.join(",")`.join("\n");
 }
 
-unittest
+pure unittest
 {
 	enum strarysdata = "a,b,c\nd,e,f\ng,h,i".to2DArray();
 	static assert(strarysdata.toCsvData() == `"a","b","c"`"\n"`"d","e","f"`"\n"`"g","h","i"`);
