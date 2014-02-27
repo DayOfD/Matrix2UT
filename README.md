@@ -25,9 +25,9 @@ First two lines are the header for the unittest.
 The first line denotes function properties to be tested.
 `func_name`, `temp_in`, `in` and `in_exp` mean the inputs of the function or the global variables which may be modified by the function for unittest.
 
-|property|`func_name`|`temp_in`|`in`|`in_exp`|
-|-
-|meaning| function name | template argument| runtime argument | global variable|
+| property | `func_name` | `temp_in` | `in` | `in_exp` |
+|----------|-------------|-----------|------|----------|
+| meaning | function name | template argument| runtime argument | global variable |
 
 `return`, `out_exp` and `result` mean the expected return value of the function,
 the value of global variable after calling the function, and the unittest result respectively
