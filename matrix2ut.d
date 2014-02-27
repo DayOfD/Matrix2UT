@@ -19,7 +19,7 @@ static assert(naturals[0] == 1);
 auto parse(in string[] header) pure @safe nothrow
 {
     size_t[][string] ret;
-    immutable headerList = [
+    enum headerList = [
         "func_name", "temp_in", "in", "in_exp",
         "return", "out_exp", "result",
         ];
@@ -27,8 +27,7 @@ auto parse(in string[] header) pure @safe nothrow
     auto hd = header[];
     foreach(h; headerList)
     {
-        auto tmp = hd.until!"a != b"(h);
-        auto len = tmp.walkLength;
+        immutable len = hd.until!"a != b"(h).walkLength;
         ret[h] = idx.take(len).array;
         idx = idx.drop(len);
         hd = hd.drop(len);
@@ -40,7 +39,7 @@ auto parse(in string[] header) pure @safe nothrow
 ///
 pure @safe nothrow unittest
 {
-    auto header = [
+    enum header = [
         "func_name",
         "temp_in", "temp_in",
         "in",
@@ -48,7 +47,7 @@ pure @safe nothrow unittest
         "return",
         "out_exp", "out_exp",
         "result"];
-    auto ret = header.parse();
+    enum ret = header.parse();
     assert(ret["func_name"] == [0]);
     assert(ret["temp_in"]   == [1, 2]);
     assert(ret["in"]        == [3]);
@@ -60,8 +59,8 @@ pure @safe nothrow unittest
 
 pure @safe nothrow unittest
 {
-    auto header = ["func_name", "in", "return"];
-    auto ret = header.parse();
+    enum header = ["func_name", "in", "return"];
+    enum ret = header.parse();
     assert(ret["func_name"] == [0]);
     assert(ret["in"]        == [1]);
     assert(ret["return"]    == [2]);
