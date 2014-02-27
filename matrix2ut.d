@@ -85,7 +85,7 @@ body
     size_t[] tempInIndices = headerParsed["temp_in"];
     size_t[] inIndices     = headerParsed["in"];
     size_t[] inExpIndices  = headerParsed["in_exp"];
-    size_t   returnIndex   = headerParsed["return"][0];
+    size_t[] returnIndices = headerParsed["return"];
     size_t[] outExpIndices = headerParsed["out_exp"];
 
     foreach (lineIndex, line; matrix[2..$])
@@ -112,21 +112,39 @@ body
             funcArgs.put(line[inIndex]);
         }
 
-        if (tempArgs.data.length)
+        if(returnIndices.length)
         {
-            utLines.put(format("results.put(utAssert(`%s`,%s!(%s)(%s),%s));", funcName,
-                                                                              funcName,
-                                                                              tempArgs.data.join(","),
-                                                                              funcArgs.data.join(","),
-                                                                              line[returnIndex]));
+            if (tempArgs.data.length)
+            {
+                utLines.put(format("results.put(utAssert(`%s`,%s!(%s)(%s),%s));", funcName,
+                                                                                  funcName,
+                                                                                  tempArgs.data.join(","),
+                                                                                  funcArgs.data.join(","),
+                                                                                  line[returnIndices[0]]));
+            }
+            else
+            {
+                utLines.put(format("results.put(utAssert(`%s`,%s(%s),%s));", funcName,
+                                                                             funcName,
+                                                                             funcArgs.data.join(","),
+                                                                             line[returnIndices[0]]));
+            }
         }
         else
         {
-            utLines.put(format("results.put(utAssert(`%s`,%s(%s),%s));", funcName,
-                                                                         funcName,
-                                                                         funcArgs.data.join(","),
-                                                                         line[returnIndex]));
+            if (tempArgs.data.length)
+            {
+                utLines.put(format("%s!(%s)(%s);", funcName,
+                                                   tempArgs.data.join(","),
+                                                   funcArgs.data.join(",")));
+            }
+            else
+            {
+                utLines.put(format("%s(%s);", funcName,
+                                              funcArgs.data.join(",")));
+            }
         }
+
 
         foreach(outExpIndex; outExpIndices)
         {
@@ -207,6 +225,34 @@ pure @safe unittest
                             "results.put(utAssert(`b`,b,8));"
                             "reports[3][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
                             "if(reports[3][$-1].empty)reports[3][$-1]=\"OK\";"
+                            "results.shrinkTo(0);");
+
+    assert(generateUnittest([["func_name", "result"],
+                             ["",          ""],
+                             ["hoge",      ""]])
+                            
+                            ==
+                            
+                            "import std.array,std.algorithm;"
+                            "Appender!(string[]) results;"
+                            
+                            "hoge();"
+                            "reports[2][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
+                            "if(reports[2][$-1].empty)reports[2][$-1]=\"OK\";"
+                            "results.shrinkTo(0);");
+
+    assert(generateUnittest([["func_name", "temp_in", "in",  "result"],
+                             ["",          "",        "",    ""],
+                             ["hoge",      "int",     "6",   ""]])
+                            
+                            ==
+                            
+                            "import std.array,std.algorithm;"
+                            "Appender!(string[]) results;"
+                            
+                            "hoge!(int)(6);"
+                            "reports[2][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
+                            "if(reports[2][$-1].empty)reports[2][$-1]=\"OK\";"
                             "results.shrinkTo(0);");
 }
 
