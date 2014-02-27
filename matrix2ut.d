@@ -281,7 +281,15 @@ string utAssert(T)(string name, T right, T left)
     assert(utAssert("bar", 4, 5) == "utAssert failed: bar expects 5 (actual: 4)");
 }
 
-string matrix2ut(string csvdata)
+mixin template matrix2ut(string csvFileName)
 {
-	return null;
+    enum reports_ = import(csvFileName).to2DArray();
+
+    string[][] reports = reports_;
+
+    mixin(generateUnittest(reports_));
+
+    File csvFile = File(csvFileName);
+    csvFile.write(repors.toCsvData());
 }
+
