@@ -14,7 +14,7 @@ static assert(naturals[0] == 1);
  * Returns: hashtable which has kinds of headers
  *          and their indices
  */
-auto parse(in string[] header) pure @safe
+auto parse(in string[] header) pure @safe nothrow
 {
     size_t[][string] ret;
     immutable headerList = [
@@ -22,7 +22,7 @@ auto parse(in string[] header) pure @safe
         "return", "out_exp", "result",
         ];
     auto idx = naturals.map!"a-1";
-    auto hd = header.dup;
+    auto hd = header[];
     foreach(h; headerList)
     {
         auto tmp = hd.until!"a != b"(h);
@@ -36,7 +36,7 @@ auto parse(in string[] header) pure @safe
 }
 
 ///
-pure @safe unittest
+pure @safe nothrow unittest
 {
     auto header = [
         "func_name",
@@ -56,7 +56,7 @@ pure @safe unittest
     assert(ret["result"]    == [10]);
 }
 
-pure @safe unittest
+pure @safe nothrow unittest
 {
     auto header = ["func_name", "in", "return"];
     auto ret = header.parse();
