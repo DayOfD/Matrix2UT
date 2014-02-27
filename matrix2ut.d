@@ -275,7 +275,7 @@ string utAssert(T)(string name, T right, T left)
 }
 
 ///
-unittest
+@safe pure unittest
 {
     assert(utAssert("foo", 3, 3) == "");
     assert(utAssert("bar", 4, 5) == "utAssert failed: bar expects 5 (actual: 4)");
