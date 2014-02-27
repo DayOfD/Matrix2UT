@@ -185,7 +185,29 @@ pure @safe unittest
                             "if(reports[3][$-1].empty)reports[3][$-1]=\"OK\";"
                             "results.shrinkTo(0);");
 
+    assert(generateUnittest([["func_name", "in", "in_exp", "return", "out_exp", "result"],
+                             ["",          "",   "a",      "",       "b",       ""],
+                             ["hoge",      "2",  "1",      "3",      "4",       ""],
+                             ["piyo",      "6",  "5",      "7",      "8",       ""]])
 
+                            ==
+
+                            "import std.array,std.algorithm;"
+                            "Appender!(string[]) results;"
+
+                            "a=1;"
+                            "results.put(utAssert(`hoge`,hoge(2),3));"
+                            "results.put(utAssert(`b`,b,4));"
+                            "reports[2][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
+                            "if(reports[2][$-1].empty)reports[2][$-1]=\"OK\";"
+                            "results.shrinkTo(0);"
+
+                            "a=5;"
+                            "results.put(utAssert(`piyo`,piyo(6),7));"
+                            "results.put(utAssert(`b`,b,8));"
+                            "reports[3][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
+                            "if(reports[3][$-1].empty)reports[3][$-1]=\"OK\";"
+                            "results.shrinkTo(0);");
 }
 
 
