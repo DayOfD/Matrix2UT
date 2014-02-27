@@ -1,7 +1,9 @@
 module matrix2ut;
 
 import std.algorithm: until;
-import std.array:     Appender, array, empty;
+import std.array:     Appender, array, empty, join;
+import std.conv:      to;
+import std.format:    formattedWrite;
 import std.range:     drop, sequence, take, walkLength;
 
 enum naturals = sequence!"a[0]+n"(1);
@@ -62,24 +64,87 @@ body
 {
     Appender!(string[]) utLines;
 
-    string[] header = matrix[0];
-    string[] exps   = matrix[1];
+    utLines.put(q{import std.array;});
+    utLines.put(q{Appender!(string[]) results;});
 
-    size_t[string] headerParsed = header.parseHeader();
-    size_t[] tempArgIndices = 
+    const string[] header = matrix[0];
+    const string[] exps   = matrix[1]; 
 
-    matrix = matrix[2..$];
+    size_t[][string] headerParsed = header.parse();
+    size_t[] tempInIndices = headerParsed["temp_in"];
+    size_t[] inIndices     = headerParsed["in"];
+    size_t[] inExpIndices  = headerParsed["in_exp"];
+    size_t   returnIndex   = headerParsed["return"][0];
+    size_t[] outExpIndices = headerParsed["out_exp"];
 
-    foreach (line; matrix)
+    foreach (lineIndex, line; matrix[2..$])
     {
         string funcName = line[0];
-        // string result line[$-1];
+        string lineIndexStr = lineIndex.to!string();
 
-        
+        foreach(inExpIndex; inExpIndices)
+        {
+            utLines.put(exps[inExpIndex] ~ "=" ~ line[inExpIndex] ~ ";");
+        }
+
+        Appender!(string[]) tempArgs;
+
+        foreach(inIndex; tempInIndices)
+        {
+            tempArgs.put(header[inIndex]);
+        }
+
+        Appender!(string[]) funcArgs;
+
+        foreach(inIndex; inIndices)
+        {
+            funcArgs.put(header[inIndex]);
+        }
+
+        if (tempArgs.data.length)
+        {
+            utLines.formattedWrite("results.put(utAssert(`%s`,%s!(%s)(%s),%s));", funcName,
+                                                                                  funcName,
+                                                                                  tempArgs.data.join(","),
+                                                                                  funcArgs.data.join(","),
+                                                                                  line[returnIndex]);
+        }
+        else
+        {
+            utLines.formattedWrite("results.put(utAssert(`%s`,%s(%s),%s));", funcName,
+                                                                             funcName,
+                                                                             funcArgs.data.join(","),
+                                                                             line[returnIndex]);
+        }
+
+        foreach(outExpIndex; outExpIndices)
+        {
+            utLines.put("results.put(utAssert(`" ~ exps[outExpIndex] ~ "`," ~ exps[outExpIndex] ~ "," ~ line[outExpIndex] ~ "));");
+        }
+
+        utLines.put("reports[" ~ lineIndexStr ~ "][$-1]=results.join(\"\\n\");");
+
+        utLines.put("if(reports[" ~ lineIndexStr ~ "][$-1].empty)reports[ ~ lineIndexStr ~ ][$-1]=\"OK\";");
+
+        utLines.put("results.shrinkTo(0);");
     }
 
-    return app.data.join();
+    return utLines.data.join();
 }
+
+unittest
+{
+    assert(generateUnittest([["func_name", "in", "return"],
+                             ["hoge"       "0"   "0"]]
+                            ==
+                            "import std.array;"
+                            "Appender!(string[]) results;"
+                            "results.put(utAssert(`hoge`,hoge(0),0));"
+                            "reports[0][$-1]=resutls.join(\"\\n\");"
+                            "if(reports[0][$-1].empty)reports[0][$-1]=\"OK\";"
+                            "results.shrinkTo(0);"));
+}
+
 
 /*******************************************************************************
  * Read to convert csv to strings of 2D array.
