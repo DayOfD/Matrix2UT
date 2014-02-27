@@ -48,7 +48,7 @@ pure @safe unittest
         "result"];
     auto ret = header.parse();
     assert(ret["func_name"] = [0]);
-    assert(ret["temp_in"]  = [1, 2]);
+    assert(ret["temp_in"]   = [1, 2]);
     assert(ret["in"]        = [3]);
     assert(ret["in_exp"]    = [4, 5, 6]);
     assert(ret["return"]    = [7]);
