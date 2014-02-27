@@ -48,4 +48,34 @@ unittest
 {
 	enum csvdata = "a,b,c\nd,e,f\ng,h,i";
 	static assert(csvdata.to2DArray() == [["a", "b", "c"], ["d", "e", "f"], ["g", "h", "i"]]);
+	assert(csvdata.to2DArray() == [["a", "b", "c"], ["d", "e", "f"], ["g", "h", "i"]]);
+}
+
+
+
+/*******************************************************************************
+ * Write csv from strings of 2D array.
+ */
+string toCsvData(string[][] strarys)
+{
+	import std.array, std.algorithm, std.conv;
+	auto app = appender!(string[][])();
+	auto appCells = appender!(string[])();
+	foreach (cols; strarys)
+	{
+		foreach (cell; cols)
+		{
+			appCells.put(text(`"`, cell.replace(`"`, `""`), `"`));
+		}
+		app.put(appCells.data.dup);
+		appCells.shrinkTo(0);
+	}
+	return app.data.map!`a.join(",")`.join("\n");
+}
+
+unittest
+{
+	enum strarysdata = "a,b,c\nd,e,f\ng,h,i".to2DArray();
+	static assert(strarysdata.toCsvData() == `"a","b","c"`"\n"`"d","e","f"`"\n"`"g","h","i"`);
+	assert(strarysdata.toCsvData() == `"a","b","c"`"\n"`"d","e","f"`"\n"`"g","h","i"`);
 }
