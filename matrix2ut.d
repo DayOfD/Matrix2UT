@@ -7,6 +7,11 @@ import std.range:     drop, sequence, take, walkLength;
 enum naturals = sequence!"a[0]+n"(1);
 static assert(naturals[0] == 1);
 
+/**
+ * Parse header
+ * Returns: hashtable which has kinds of headers
+ *          and their indices
+ */
 auto parse(string[] header) pure @safe nothrow
 {
     size_t[][string] ret;
@@ -27,6 +32,7 @@ auto parse(string[] header) pure @safe nothrow
     return ret;
 }
 
+///
 pure @safe nothrow unittest
 {
     auto header = [
