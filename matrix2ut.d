@@ -6,6 +6,8 @@ import std.conv:      to;
 import std.string:    format;
 import std.range:     drop, sequence, take, walkLength;
 
+private:
+
 enum naturals = sequence!"a[0]+n"(1);
 static assert(naturals[0] == 1);
 
@@ -204,4 +206,17 @@ unittest
 	enum strarysdata = "a,b,c\nd,e,f\ng,h,i".to2DArray();
 	static assert(strarysdata.toCsvData() == `"a","b","c"`"\n"`"d","e","f"`"\n"`"g","h","i"`);
 	assert(strarysdata.toCsvData() == `"a","b","c"`"\n"`"d","e","f"`"\n"`"g","h","i"`);
+}
+
+
+public:
+
+string utAssert(T)(string name, T right, T left)
+{
+	return null;
+}
+
+string matrix2ut(string csvdata)
+{
+	return null;
 }
