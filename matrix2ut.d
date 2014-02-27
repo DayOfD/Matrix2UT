@@ -244,7 +244,13 @@ public:
 
 string utAssert(T)(string name, T right, T left)
 {
-	return null;
+	return right == left ? "" : format("utAssert failed: %s expects %s (actual: %s)", name, left, right);
+}
+
+unittest
+{
+    assert(utAssert("foo", 3, 3) == "");
+    assert(utAssert("bar", 4, 5) == "utAssert failed: bar expects 5 (actual: 4)");
 }
 
 string matrix2ut(string csvdata)
