@@ -1,6 +1,6 @@
 module matrix2ut;
 
-import std.algorithm: until;
+import std.algorithm: map, until;
 import std.array:     Appender, array, empty, join;
 import std.conv:      to;
 import std.string:    format;
@@ -21,16 +21,17 @@ auto parse(in string[] header) pure @safe
         "func_name", "temp_in", "in", "in_exp",
         "return", "out_exp", "result",
         ];
-    auto idx = naturals;
+    auto idx = naturals.map!"a-1";
     auto hd = header.dup;
     foreach(h; headerList)
     {
-        auto tmp = hd.until(h);
+        auto tmp = hd.until!"a != b"(h);
         auto len = tmp.walkLength;
         ret[h] = idx.take(len).array;
-        idx.drop(len);
+        idx = idx.drop(len);
         hd = hd.drop(len);
     }
+    assert(hd.empty);
     return ret;
 }
 
@@ -47,12 +48,21 @@ pure @safe unittest
         "result"];
     auto ret = header.parse();
     assert(ret["func_name"] = [0]);
-    assert(ret["temp_arg"]  = [1, 2]);
+    assert(ret["temp_in"]  = [1, 2]);
     assert(ret["in"]        = [3]);
     assert(ret["in_exp"]    = [4, 5, 6]);
     assert(ret["return"]    = [7]);
     assert(ret["out_exp"]   = [8, 9]);
     assert(ret["result"]    = [10]);
+}
+
+pure @safe unittest
+{
+    auto header = ["func_name", "in", "return"];
+    auto ret = header.parse();
+    assert(ret["func_name"] == [0]);
+    assert(ret["in"] == [1]);
+    assert(ret["return"] == [2]);
 }
 
 string generateUnittest(in string[][] matrix) pure @safe
