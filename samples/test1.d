@@ -20,5 +20,12 @@ void main()
 		glB = b*c;
 		return a+b+c;
 	}
+	
+	import std.file, std.string;
+	copy("test1.csv", "test1-testing.csv");
 	mixin(csv2ut!"test1.csv");
+	assert((cast(string)std.file.read("test1.csv")).chomp == (cast(string)std.file.read("test1-tested.csv")).chomp);
+	remove("test1.csv");
+	copy("test1-testing.csv", "test1.csv");
+	remove("test1-testing.csv");
 }
