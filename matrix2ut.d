@@ -3,7 +3,7 @@ module matrix2ut;
 import std.algorithm: until;
 import std.array:     Appender, array, empty, join;
 import std.conv:      to;
-import std.format:    formattedWrite;
+import std.string:    format;
 import std.range:     drop, sequence, take, walkLength;
 
 enum naturals = sequence!"a[0]+n"(1);
@@ -103,18 +103,18 @@ body
 
         if (tempArgs.data.length)
         {
-            utLines.formattedWrite("results.put(utAssert(`%s`,%s!(%s)(%s),%s));", funcName,
-                                                                                  funcName,
-                                                                                  tempArgs.data.join(","),
-                                                                                  funcArgs.data.join(","),
-                                                                                  line[returnIndex]);
+            utLines.put(format("results.put(utAssert(`%s`,%s!(%s)(%s),%s));", funcName,
+                                                                              funcName,
+                                                                              tempArgs.data.join(","),
+                                                                              funcArgs.data.join(","),
+                                                                              line[returnIndex]));
         }
         else
         {
-            utLines.formattedWrite("results.put(utAssert(`%s`,%s(%s),%s));", funcName,
-                                                                             funcName,
-                                                                             funcArgs.data.join(","),
-                                                                             line[returnIndex]);
+            utLines.put(format("results.put(utAssert(`%s`,%s(%s),%s));", funcName,
+                                                                         funcName,
+                                                                         funcArgs.data.join(","),
+                                                                         line[returnIndex]));
         }
 
         foreach(outExpIndex; outExpIndices)
@@ -134,15 +134,15 @@ body
 
 unittest
 {
-    assert(generateUnittest([["func_name", "in", "return"],
-                             ["hoge"       "0"   "0"]]
+    assert(generateUnittest([["func_name", "in", "return", "result"],
+                             ["hoge",      "0",  "0",      ""]])
                             ==
                             "import std.array;"
                             "Appender!(string[]) results;"
                             "results.put(utAssert(`hoge`,hoge(0),0));"
                             "reports[0][$-1]=resutls.join(\"\\n\");"
                             "if(reports[0][$-1].empty)reports[0][$-1]=\"OK\";"
-                            "results.shrinkTo(0);"));
+                            "results.shrinkTo(0);");
 }
 
 
