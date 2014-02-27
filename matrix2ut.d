@@ -66,7 +66,7 @@ pure @safe nothrow unittest
     assert(ret["return"]    == [2]);
 }
 
-string generateUnittest(in string[][] matrix) pure @safe
+public string generateUnittest(in string[][] matrix) pure @safe
 in
 {
     assert(matrix.length >= 2);
@@ -214,7 +214,7 @@ pure @safe unittest
 /*******************************************************************************
  * Read to convert csv to strings of 2D array.
  */
-string[][] to2DArray(string csvdata)
+public string[][] to2DArray(string csvdata)
 {
 	import std.array, std.csv;
 	auto app = appender!(string[][])();
@@ -237,7 +237,7 @@ unittest
 /*******************************************************************************
  * Write csv from strings of 2D array.
  */
-string toCsvData(in string[][] strarys) pure
+public string toCsvData(in string[][] strarys) pure
 {
 	import std.array, std.algorithm, std.conv;
 	auto app = appender!(string[][])();
@@ -261,15 +261,12 @@ pure unittest
 	assert(strarysdata.toCsvData() == `"a","b","c"`"\n"`"d","e","f"`"\n"`"g","h","i"`);
 }
 
-
-public:
-
 /**
  * Custom assert for matrix2ut.
  * Returns: Empty string if right == left holds.
  *          Otherwise returns an error message string for the report
  */
-string utAssert(T)(string name, T right, T left)
+public string utAssert(T)(string name, T right, T left)
 {
 	return right == left ? "" : format("utAssert failed: %s expects %s (actual: %s)", name, left, right);
 }
@@ -281,15 +278,16 @@ string utAssert(T)(string name, T right, T left)
     assert(utAssert("bar", 4, 5) == "utAssert failed: bar expects 5 (actual: 4)");
 }
 
-mixin template matrix2ut(string csvFileName)
+///
+public enum csv2ut(string csvFileName) = `
 {
-    enum reports_ = import(csvFileName).to2DArray();
-
+    enum reports_ = import("`~csvFileName~`").to2DArray();
     string[][] reports = reports_;
-
     mixin(generateUnittest(reports_));
-
-    File csvFile = File(csvFileName);
-    csvFile.write(repors.toCsvData());
-}
+    if (!__ctfe)
+    {
+        static import std.file;
+        std.file.write("`~csvFileName~`", reports.toCsvData());
+    }
+}`;
 
