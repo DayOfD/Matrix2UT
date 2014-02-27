@@ -39,7 +39,7 @@ To test `foo`, please import `matrix2ut` and call `csv2ut` for the input CSV fil
 (we assume sample.d and sample.csv is in the same directory).
 
 ```d:sample.d
-import matrix2ut;
+import matrix2ut; // To generate test cases
 
 int foo(T)(int a, int b) { /* definition of foo */ }
 
@@ -47,7 +47,7 @@ unittest
 {
     int glA;
     int glB;
-    mixin(csv2ut!"sample.csv");
+    mixin(csv2ut!"sample.csv"); // generate tests!
 }
 ```
 
