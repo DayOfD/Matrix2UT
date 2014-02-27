@@ -242,11 +242,17 @@ pure unittest
 
 public:
 
+/**
+ * Custom assert for matrix2ut.
+ * Returns: Empty string if right == left holds.
+ *          Otherwise returns an error message string for the report
+ */
 string utAssert(T)(string name, T right, T left)
 {
 	return right == left ? "" : format("utAssert failed: %s expects %s (actual: %s)", name, left, right);
 }
 
+///
 unittest
 {
     assert(utAssert("foo", 3, 3) == "");
