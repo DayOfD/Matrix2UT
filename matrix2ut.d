@@ -47,13 +47,13 @@ pure @safe unittest
         "out_exp", "out_exp",
         "result"];
     auto ret = header.parse();
-    assert(ret["func_name"] = [0]);
-    assert(ret["temp_in"]   = [1, 2]);
-    assert(ret["in"]        = [3]);
-    assert(ret["in_exp"]    = [4, 5, 6]);
-    assert(ret["return"]    = [7]);
-    assert(ret["out_exp"]   = [8, 9]);
-    assert(ret["result"]    = [10]);
+    assert(ret["func_name"] == [0]);
+    assert(ret["temp_in"]   == [1, 2]);
+    assert(ret["in"]        == [3]);
+    assert(ret["in_exp"]    == [4, 5, 6]);
+    assert(ret["return"]    == [7]);
+    assert(ret["out_exp"]   == [8, 9]);
+    assert(ret["result"]    == [10]);
 }
 
 pure @safe unittest
@@ -61,8 +61,8 @@ pure @safe unittest
     auto header = ["func_name", "in", "return"];
     auto ret = header.parse();
     assert(ret["func_name"] == [0]);
-    assert(ret["in"] == [1]);
-    assert(ret["return"] == [2]);
+    assert(ret["in"]        == [1]);
+    assert(ret["return"]    == [2]);
 }
 
 string generateUnittest(in string[][] matrix) pure @safe
