@@ -164,6 +164,28 @@ unittest
                             "reports[1][$-1]=results.data.join(\"\\n\");"
                             "if(reports[1][$-1].empty)reports[1][$-1]=\"OK\";"
                             "results.shrinkTo(0);");
+
+    assert(generateUnittest([["func_name", "temp_in", "temp_in", "in", "in", "return", "result"],
+                             ["",          "",        "",        "",   "",   "",       ""],
+                             ["hoge",      "int",     "long",    "1",  "2",  "3",      ""],
+                             ["piyo",      "string",  "int[]",   "4",  "5",  "6",      ""]])
+
+                            ==
+
+                            "import std.array;"
+                            "Appender!(string[]) results;"
+
+                            "results.put(utAssert(`hoge`,hoge!(int,long)(1,2),3));"
+                            "reports[0][$-1]=results.data.join(\"\\n\");"
+                            "if(reports[0][$-1].empty)reports[0][$-1]=\"OK\";"
+                            "results.shrinkTo(0);"
+
+                            "results.put(utAssert(`piyo`,piyo!(string,int[])(4,5),6));"
+                            "reports[1][$-1]=results.data.join(\"\\n\");"
+                            "if(reports[1][$-1].empty)reports[1][$-1]=\"OK\";"
+                            "results.shrinkTo(0);");
+
+
 }
 
 
