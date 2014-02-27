@@ -65,6 +65,10 @@ Otherwise you will see `NG` and the reason why the unittest failed.
 
 Have fun!
 
+Known Issue
+===========
+- Valuable arguments are not supported
+
 LICENCE
 =======
 This software is released under CC0: http://creativecommons.org/publicdomain/zero/1.0/
