@@ -16,7 +16,7 @@ auto parse(string[] header) pure @safe nothrow
 {
     size_t[][string] ret;
     immutable headerList = [
-        "func_name", "temp_arg", "in", "in_exp",
+        "func_name", "temp_in", "in", "in_exp",
         "return", "out_exp", "result",
         ];
     auto idx = naturals;
@@ -36,7 +36,7 @@ pure @safe nothrow unittest
 {
     auto header = [
         "func_name",
-        "temp_arg", "temp_arg",
+        "temp_in", "temp_in",
         "in",
         "in_exp", "in_exp", "in_exp",
         "return",
