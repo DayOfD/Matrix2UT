@@ -75,7 +75,7 @@ body
 {
     Appender!(string[]) utLines;
 
-    utLines.put(q{import std.array;});
+    utLines.put(q{import std.array,std.algorithm;});
     utLines.put(q{Appender!(string[]) results;});
 
     const string[] header = matrix[0];
@@ -133,7 +133,7 @@ body
             utLines.put("results.put(utAssert(`" ~ exps[outExpIndex] ~ "`," ~ exps[outExpIndex] ~ "," ~ line[outExpIndex] ~ "));");
         }
 
-        utLines.put("reports[" ~ lineIndexStr ~ "][$-1]=results.data.join(\"\\n\");");
+        utLines.put("reports[" ~ lineIndexStr ~ "][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");");
 
         utLines.put("if(reports[" ~ lineIndexStr ~ "][$-1].empty)reports[" ~ lineIndexStr ~ "][$-1]=\"OK\";");
 
@@ -152,16 +152,16 @@ unittest
 
                             ==
 
-                            "import std.array;"
+                            "import std.array,std.algorithm;"
                             "Appender!(string[]) results;"
 
                             "results.put(utAssert(`hoge`,hoge(1),2));"
-                            "reports[0][$-1]=results.data.join(\"\\n\");"
+                            "reports[0][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
                             "if(reports[0][$-1].empty)reports[0][$-1]=\"OK\";"
                             "results.shrinkTo(0);"
 
                             "results.put(utAssert(`piyo`,piyo(3),4));"
-                            "reports[1][$-1]=results.data.join(\"\\n\");"
+                            "reports[1][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
                             "if(reports[1][$-1].empty)reports[1][$-1]=\"OK\";"
                             "results.shrinkTo(0);");
 
@@ -172,16 +172,16 @@ unittest
 
                             ==
 
-                            "import std.array;"
+                            "import std.array,std.algorithm;"
                             "Appender!(string[]) results;"
 
                             "results.put(utAssert(`hoge`,hoge!(int,long)(1,2),3));"
-                            "reports[0][$-1]=results.data.join(\"\\n\");"
+                            "reports[0][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
                             "if(reports[0][$-1].empty)reports[0][$-1]=\"OK\";"
                             "results.shrinkTo(0);"
 
                             "results.put(utAssert(`piyo`,piyo!(string,int[])(4,5),6));"
-                            "reports[1][$-1]=results.data.join(\"\\n\");"
+                            "reports[1][$-1]=results.data.filter!(str=>str.length)().join(\"\\n\");"
                             "if(reports[1][$-1].empty)reports[1][$-1]=\"OK\";"
                             "results.shrinkTo(0);");
 
