@@ -20,8 +20,7 @@ auto parse(string[] header) pure @safe nothrow
         "return", "out_exp", "result",
         ];
     auto idx = naturals;
-    foreach(h; ["func_name", "temp_arg", "in", "in_exp",
-                "return", "out_exp", "result"])
+    foreach(h; headerList)
     {
         auto tmp = header.until(h);
         auto len = tmp.walkLength;
